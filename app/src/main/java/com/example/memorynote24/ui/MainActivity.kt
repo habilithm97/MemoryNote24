@@ -3,13 +3,17 @@ package com.example.memorynote24.ui
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.memorynote24.adapter.NoteAdapter
 import com.example.memorynote24.databinding.ActivityMainBinding
+import com.example.memorynote24.viewmodel.NoteViewModel
 
 class MainActivity : AppCompatActivity() {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val noteAdapter by lazy { NoteAdapter() }
+    private val viewModel: NoteViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,5 +36,10 @@ class MainActivity : AppCompatActivity() {
             setHasFixedSize(true) // 고정된 사이즈의 RecyclerView -> 불필요한 리소스 줄이기
             adapter = noteAdapter
         }
+
+        // 리스트를 관찰하여 변경 시 어댑터에 전달함
+        viewModel.getAll.observe(this, Observer {
+            noteAdapter.updateList(it)
+        })
     }
 }
