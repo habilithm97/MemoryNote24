@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">MemoryNote24</string>
-    <string name="title">Title</string>
-    <string name="content">Content</string>
-    <string name="cancel">Cancel</string>
-    <string name="save">Save</string>
+    <string name="title">title</string>
+    <string name="content">content</string>
+    <string name="cancel">cancel</string>
+    <string name="save">save</string>
 </resources>
