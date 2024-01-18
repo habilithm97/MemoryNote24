@@ -25,7 +25,6 @@ class NoteActivity : AppCompatActivity() {
         binding.btnCancel.setOnClickListener {
             finish()
         }
-
         binding.btnSave.setOnClickListener {
             save()
         }
@@ -42,5 +41,11 @@ class NoteActivity : AppCompatActivity() {
             viewModel.addNote(note)
             finish()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        binding.edtTitle.requestFocus()
     }
 }
