@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.memorynote24.adapter.NoteAdapter
 import com.example.memorynote24.databinding.ActivityMainBinding
 import com.example.memorynote24.viewmodel.NoteViewModel
@@ -41,5 +43,28 @@ class MainActivity : AppCompatActivity() {
         viewModel.getAll.observe(this, Observer {
             noteAdapter.updateList(it)
         })
+
+        val itemTouchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                val note = noteAdapter.noteList[position]
+
+                when(direction) {
+                    ItemTouchHelper.LEFT -> {
+                        viewModel.deleteNote(note)
+                    }
+                }
+            }
+        }
+        ItemTouchHelper(itemTouchCallback).apply {
+            attachToRecyclerView(binding.rv)
+        }
     }
 }
