@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
 
         // 리스트를 관찰하여 변경 시 어댑터에 전달함
         viewModel.getAll.observe(this, Observer {
-            noteAdapter.updateList(it)
+            noteAdapter.submitList(it)
         })
 
         val itemTouchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
             }
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
-                val note = noteAdapter.noteList[position]
+                val note = noteAdapter.getPosition(position)
 
                 when(direction) {
                     ItemTouchHelper.LEFT -> {
