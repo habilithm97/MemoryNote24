@@ -1,15 +1,20 @@
 package com.example.memorynote24.ui
 
+import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.memorynote24.R
 import com.example.memorynote24.adapter.NoteAdapter
 import com.example.memorynote24.databinding.ActivityMainBinding
+import com.example.memorynote24.room.Note
 import com.example.memorynote24.viewmodel.NoteViewModel
 
 class MainActivity : AppCompatActivity() {
@@ -58,7 +63,7 @@ class MainActivity : AppCompatActivity() {
 
                 when(direction) {
                     ItemTouchHelper.LEFT -> {
-                        viewModel.deleteNote(note)
+                        deleteDialog(note)
                     }
                 }
             }
@@ -66,5 +71,19 @@ class MainActivity : AppCompatActivity() {
         ItemTouchHelper(itemTouchCallback).apply {
             attachToRecyclerView(binding.rv)
         }
+    }
+
+    private fun deleteDialog(note: Note) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(R.string.delete_title)
+            .setMessage(R.string.delete_msg)
+            .setPositiveButton(R.string.ok, DialogInterface.OnClickListener {
+                dialog, i -> viewModel.deleteNote(note)
+                Toast.makeText(this, R.string.delete, Toast.LENGTH_SHORT).show()
+            })
+            .setNegativeButton(R.string.cancel, DialogInterface.OnClickListener {
+                    dialog, i -> dialog.dismiss()
+            })
+        builder.show()
     }
 }
