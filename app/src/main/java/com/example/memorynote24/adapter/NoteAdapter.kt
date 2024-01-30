@@ -2,9 +2,11 @@ package com.example.memorynote24.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.memorynote24.R
 import com.example.memorynote24.databinding.ItemNoteBinding
 import com.example.memorynote24.room.Note
 
@@ -24,13 +26,12 @@ class NoteAdapter : ListAdapter<Note, NoteAdapter.NoteViewHolder>(DiffCallback()
 
     class NoteViewHolder(val binding: ItemNoteBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(note: Note) {
-            binding.tvTitle.text = note.title
-            binding.tvContent.text = note.content
+           binding.note = note
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteAdapter.NoteViewHolder {
-        val binding = ItemNoteBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = DataBindingUtil.inflate<ItemNoteBinding>(LayoutInflater.from(parent.context), R.layout.item_note, parent, false)
         return NoteViewHolder(binding)
     }
 

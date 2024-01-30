@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,13 +19,12 @@ import com.example.memorynote24.room.Note
 import com.example.memorynote24.viewmodel.NoteViewModel
 
 class MainActivity : AppCompatActivity() {
-    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    private val binding by lazy { DataBindingUtil.setContentView<ActivityMainBinding>(this@MainActivity, R.layout.activity_main) }
     private val noteAdapter by lazy { NoteAdapter() }
     private val viewModel: NoteViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
 
         init()
     }
@@ -57,11 +57,12 @@ class MainActivity : AppCompatActivity() {
             ): Boolean {
                 return false
             }
+
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
                 val note = noteAdapter.getPosition(position)
 
-                when(direction) {
+                when (direction) {
                     ItemTouchHelper.LEFT -> {
                         deleteDialog(note)
                     }
@@ -77,12 +78,12 @@ class MainActivity : AppCompatActivity() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(R.string.delete_title)
             .setMessage(R.string.delete_msg)
-            .setPositiveButton(R.string.ok, DialogInterface.OnClickListener {
-                dialog, i -> viewModel.deleteNote(note)
+            .setPositiveButton(R.string.ok, DialogInterface.OnClickListener { dialog, i ->
+                viewModel.deleteNote(note)
                 Toast.makeText(this, R.string.delete, Toast.LENGTH_SHORT).show()
             })
-            .setNegativeButton(R.string.cancel, DialogInterface.OnClickListener {
-                    dialog, i -> dialog.dismiss()
+            .setNegativeButton(R.string.cancel, DialogInterface.OnClickListener { dialog, i ->
+                dialog.dismiss()
             })
         builder.show()
     }
