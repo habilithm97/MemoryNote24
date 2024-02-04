@@ -1,18 +1,23 @@
 package com.example.memorynote24.ui
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.viewModels
 import com.example.memorynote24.R
 import com.example.memorynote24.databinding.ActivityNoteBinding
-import com.example.memorynote24.room.Note
-import com.example.memorynote24.viewmodel.NoteViewModel
 
 class NoteActivity : AppCompatActivity() {
     private val binding by lazy { ActivityNoteBinding.inflate(layoutInflater) }
-    // ViewModelProvider를 사용하지 않고 viewModel 지연 생성 가능
-    private val viewModel: NoteViewModel by viewModels()
+    private var id = -1
+
+    companion object {
+        const val ID = "id"
+        const val TITLE = "title"
+        const val CONTENT = "content"
+        const val INSERT = 0
+        const val UPDATE = 1
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,11 +27,21 @@ class NoteActivity : AppCompatActivity() {
     }
 
     private fun init() {
-        binding.btnCancel.setOnClickListener {
-            finish()
+        binding.apply {
+            btnCancel.setOnClickListener {
+                finish()
+            }
+            btnSave.setOnClickListener {
+                save()
+            }
         }
-        binding.btnSave.setOnClickListener {
-            save()
+        val intent = intent
+        if(intent.hasExtra(ID)) { // 전달 받은 intent에 id 값이 있으면 수정 모드
+            id = intent.getIntExtra(ID, -1)
+            binding.edtTitle.setText(intent.getStringExtra(TITLE))
+            binding.edtContent.setText(intent.getStringExtra(CONTENT))
+        } else { // 추가 모드
+            id = intent.getIntExtra(ID, -1)
         }
     }
 
@@ -34,11 +49,19 @@ class NoteActivity : AppCompatActivity() {
         val title = binding.edtTitle.text.toString()
         val content = binding.edtContent.text.toString()
 
-        if(title.isEmpty()) {
+        if(title.trim().isEmpty()) {
             Toast.makeText(this, R.string.empty, Toast.LENGTH_SHORT).show()
         } else {
-            val note = Note(title, content)
-            viewModel.addNote(note)
+            val intent = Intent()
+            intent.putExtra(TITLE, title)
+            intent.putExtra(CONTENT, content)
+
+            if(id != -1) { // 수정 모드
+                intent.putExtra(ID, id)
+                setResult(UPDATE, intent)
+            } else { // 추가 모드
+                setResult(INSERT, intent)
+            }
             finish()
         }
     }

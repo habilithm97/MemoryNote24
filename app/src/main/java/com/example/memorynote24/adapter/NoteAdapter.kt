@@ -26,7 +26,7 @@ class NoteAdapter : ListAdapter<Note, NoteAdapter.NoteViewHolder>(DiffCallback()
 
     class NoteViewHolder(val binding: ItemNoteBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(note: Note) {
-           binding.note = note
+            binding.note = note
         }
     }
 
